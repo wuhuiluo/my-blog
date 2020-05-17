@@ -86,9 +86,9 @@ module.exports = {
     {
       src: '~/plugins/filter.js'
     },
-    // {
-    //   src: '~/plugins/global-component.js'
-    // },
+    {
+      src: '~/plugins/global-component.js'
+    },
     {
       src: '~/plugins/copy.js',
       ssr: false

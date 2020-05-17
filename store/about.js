@@ -1,10 +1,12 @@
 import author from '../models/author'
-
+import article from '../models/article'
 export const state = () => ({
   authors: [],
 
   //作者详情
-  author: {}
+  author: {},
+  articles: [],
+  total: 0
 })
 
 export const mutations = {
@@ -12,8 +14,20 @@ export const mutations = {
     state.authors = authors
   },
 
+  setArticles(state, {
+    articles,
+    total
+  }) {
+    state.articles = articles
+    state.total = total
+  },
+
   setAuthor(state, author) {
     state.author = author
+  },
+
+  setMoreArticles(state, { articles }) {
+    state.articles = state.articles.concat(articles)
   }
 }
 
@@ -29,6 +43,23 @@ export const actions = {
     }
   },
 
+  async getArticles({
+    commit
+  }, params) {
+    try {
+      const {
+        articles,
+        total
+      } = await article.getArticles(params)
+      commit('setArticles', {
+        articles,
+        total
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
   async getAuthor({
     commit
   }, id) {
@@ -38,5 +69,14 @@ export const actions = {
     } catch (e) {
       console.log(e)
     }
+  },
+
+  async getMoreArticles({commit}, params) {
+     try{
+      const { articles }  = await article.getArticles(params)
+      commit('setMoreArticles',{ articles })
+     } catch(e) {
+       console.log(e)
+     }
   }
 }

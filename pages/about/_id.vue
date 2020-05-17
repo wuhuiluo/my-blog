@@ -10,13 +10,17 @@
         </div>
       </template>
     </detail-header>
+    <article>
+      <article-list @loadMore="onLoadMore" :total="total" :articles="articles"></article-list>
+    </article>
   </div>
 </template>
 
 
 <script>
+import ArticleList from "@/components/base/article-list/article-list";
 import DetailHeader from "@/components/layout/detail-header/detail-header";
-import { mapState } from "vuex";
+import { mapState,mapActions } from "vuex";
 export default {
   head() {
     return {
@@ -24,7 +28,8 @@ export default {
     };
   },
   components: {
-    DetailHeader
+    DetailHeader,
+    ArticleList
   },
   data() {
     return {
@@ -32,11 +37,27 @@ export default {
       page: 0
     };
   },
+  methods:{
+      ...mapActions('about',['getMoreArticles']),
+      onLoadMore() {
+        this.page++
+        this.getMoreArticles({
+          authorId: this.id,
+          page: this.page
+        })
+      }
+  },
   async fetch({ store, params }) {
     await store.dispatch("about/getAuthor", params.id);
+    await store.dispatch("about/getArticles", {
+      authorId: params.id,
+      page: 0
+    });
   },
   computed: {
-    ...mapState("about", ["author"])
+    ...mapState("about", ["author"]),
+    ...mapState("about", ["articles"]),
+    ...mapState("about", ["total"])
   },
   created() {
     this.id = parseInt(this.$nuxt.$route.params.id);
@@ -44,6 +65,8 @@ export default {
   },
   mounted() {
     console.log(this.author);
+    console.log(this.articles);
+    console.log(this.total);
   }
 };
 </script>
@@ -57,6 +80,12 @@ export default {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
+  transition: all 0.6s;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.3);
+  }
 }
 
 .social-item {
