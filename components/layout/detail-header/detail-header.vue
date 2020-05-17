@@ -1,5 +1,5 @@
 <template>
-  <header class="detail-header">
+  <header  class="detail-header" :style="{backgroundImage: `url(${cover})`}" :class="cover ? 'is-cover' : ''">
     <div class="detail-content">
       <slot name="header"></slot>
       <h1 class="title">{{name}}</h1>
@@ -15,20 +15,35 @@ export default {
     name: {
       type: String
     },
+    cover: {
+      type: String,
+      default: '',
+    },
     description: {
       type: String
     }
+  },
+  mounted() {
+    console.log(this.cover)
   }
 };
 </script>
 
 
 <style lang="scss">
+.is-cover {
+  color: #fff !important;
+  @include cover;
+}
+
 .detail-header {
   width: calc(100% - 85px - 85px);
   margin: 0 auto;
   padding: 5vh 5% 15vh;
-  background: no-repeat;
+  font-weight: $font-weight-bold;
+  border-radius: 5px;
+  background: no-repeat center center;
+  background-size: cover;
   box-sizing: border-box;
 
   @media (max-width: 1399px) {
