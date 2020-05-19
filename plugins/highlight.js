@@ -1,4 +1,4 @@
-const highlight = require('highlight.js/lib/highlight')
+const highlight = require('highlight.js/lib/index.js')
 
 highlight.registerLanguage('cpp', require('highlight.js/lib/languages/cpp'))
 highlight.registerLanguage('xml', require('highlight.js/lib/languages/xml'))

@@ -74,12 +74,12 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    // {
-    //   src: '~/plugins/marked.js'
-    // },
-    // {
-    //   src: '~/plugins/highlight.js'
-    // },
+    {
+      src: '~/plugins/marked.js'
+    },
+    {
+      src: '~/plugins/highlight.js'
+    },
     {
       src: '~/plugins/gravatar.js'
     },

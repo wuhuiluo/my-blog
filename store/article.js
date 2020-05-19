@@ -1,7 +1,7 @@
 import article from '../models/article'
 // import comment from '../models/comment'
 import Utils from '../services/utils/util'
-// import marked from '../plugins/marked'
+import marked from '../plugins/marked'
 
 export const state = () => ({
   // 文章列表
@@ -10,8 +10,10 @@ export const state = () => ({
   starArticles: [],
   //归档
   archive: [],
-  archiveTotal: 0
-
+  archiveTotal: 0,
+  //详情
+  article: null,
+  comments: []
 })
 export const mutations = {
   setHomeArticles(state,{articles,starArticles,total}) {
@@ -19,10 +21,31 @@ export const mutations = {
       state.starArticles = starArticles
       state.total = total
   },
-
+ 
   setArchive(state, { archive, total } ) {
       state.archive = archive
       state.archiveTotal = total
+  },
+
+  setArticleDetail(state,article) {
+    state.article = article
+  },
+
+  setComments(state,comments = []) {
+    comments.forEach(v => {
+      v.content = marked(v.content)
+      if (v.parent_id !== 0) {
+        const reply = comments.find(target => target.id === v.parent_id)
+        if (reply) {
+          v.replyName = reply.nickname
+          v.replyContent = marked(reply.content)
+        } else {
+          v.replyName = ''
+          v.replyContent = '该评论已被删除'
+        }
+      }
+    })
+    state.comments = comments
   }
 }
 export const actions = {
@@ -90,6 +113,24 @@ export const actions = {
         }
       })
       commit('setArchive', { archive, total })
+    } catch(e) {
+      console.log(e)
+    }
+  },
+
+  async getArticleDetail({ commit }, params) {
+     try {
+       const result = await article.getArticleDetail(params)
+       commit('setArticleDetail',result)
+     } catch(e) {
+       console.log(e)
+     }
+  },
+
+  async getComments({commit}, params) {
+    try {
+      const comments = await article.getComments(params)
+      commit('setComments', comments)
     } catch(e) {
       console.log(e)
     }
