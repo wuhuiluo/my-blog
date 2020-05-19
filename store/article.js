@@ -1,16 +1,28 @@
 import article from '../models/article'
+// import comment from '../models/comment'
+import Utils from '../services/utils/util'
+// import marked from '../plugins/marked'
 
 export const state = () => ({
   // 文章列表
   articles: [],
   total: 0,
-  starArticles: []
+  starArticles: [],
+  //归档
+  archive: [],
+  archiveTotal: 0
+
 })
 export const mutations = {
   setHomeArticles(state,{articles,starArticles,total}) {
       state.articles = articles
       state.starArticles = starArticles
       state.total = total
+  },
+
+  setArchive(state, { archive, total } ) {
+      state.archive = archive
+      state.archiveTotal = total
   }
 }
 export const actions = {
@@ -21,6 +33,63 @@ export const actions = {
       const starArticles = await article.getStarArticles()
       //调用mutations中的方法
       commit('setHomeArticles',{articles,starArticles,total})
+    } catch(e) {
+      console.log(e)
+    }
+  },
+
+  async getArchive({ commit }) {
+    try {
+      let res = await article.getArchive()
+      res.forEach(v => {
+        v.created_date = Utils.timestampToTime(v.created_date)
+      })
+
+      function format(month, day) {
+        return month.toString().padStart(2, '0') + '.' + day.padStart(2, '0')
+      }
+
+      const total = res.length
+      let archive = []
+      // 按年份月份重新组合
+      let curYear = ''
+      let curMonth = 0
+      let yearIndex = -1
+      let monthIndex = 0
+      res.forEach(v => {
+        let dateArr = v.created_date.split('-')
+        let year = dateArr[0]
+        let month = parseInt(dateArr[1])
+        let time = dateArr[2].split(' ')[0]
+        if (year === curYear) {
+          if (month === curMonth) {
+            v.created_date = format(month, time)
+            archive[yearIndex].monthList[monthIndex].articles.push(v)
+          } else {
+            v.created_date = format(month, time)
+            archive[yearIndex].monthList.push({
+              month,
+              articles: [v]
+            })
+            monthIndex++
+            curMonth = month
+          }
+        } else {
+          v.created_date = format(month, time)
+          archive.push({
+            year,
+            monthList: [{
+              month,
+              articles: [v]
+            }]
+          })
+          yearIndex++
+          monthIndex = 0
+          curMonth = month
+          curYear = year
+        }
+      })
+      commit('setArchive', { archive, total })
     } catch(e) {
       console.log(e)
     }

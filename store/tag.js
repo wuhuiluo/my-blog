@@ -8,7 +8,9 @@ export const state = () => ({
 
     // 标签 或 分类 详情
    articles: [],
-   total: 0
+   total: 0,
+   
+   category: {}
 })
 
 export const mutations = {
@@ -24,6 +26,10 @@ export const mutations = {
 
     setMoreArticles(state, {articles} ) {
         state.articles = state.articles.concat(articles)
+    },
+
+    setCategory( state, category) {
+        state.category = category
     }
 }
 
@@ -51,6 +57,15 @@ export const actions = {
         try {
             const { articles } = await article.getArticles(params)
             commit('setMoreArticles',{ articles })
+        } catch(e) {
+            console.log(e)
+        }
+    },
+
+    async getCategory( {commit}, id) {
+        try {
+            const result = await category.getCategory(id)
+            commit('setCategory',result)
         } catch(e) {
             console.log(e)
         }

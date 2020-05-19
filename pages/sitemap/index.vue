@@ -53,7 +53,7 @@ export default {
   },
   mounted() {
     // console.log(this.tags);
-    console.log(this.categories);
+    // console.log(this.categories);
   },
   components: {
     SplitLine,
