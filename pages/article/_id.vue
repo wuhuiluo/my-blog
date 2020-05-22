@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header class="article-header">
+    <header class="article-header" :style="articleCover">
       <div class="header-wrapper">
         <div class="content">
           <tag-list :tagList="article.tags"></tag-list>
@@ -37,8 +37,9 @@
               <li class="tag-item" v-for="tag in article.tags" :key="tag.id">{{tag.name}}</li>
             </ul>
           </div>
-          <div class="like-btn">
-            <i class="icon icon-heart-fill"></i>
+          <div @click="likeArticle" class="like-btn">
+            <i :class="{'is-like': isLike}" class="icon icon-heart-fill"></i>
+            <span>{{articleLike}}</span>
           </div>
         </div>
         <!-- 相关推荐 -->
@@ -56,14 +57,35 @@
         </div>
       </div>
     </div>
-    <!-- 相关推荐 -->
+    <!-- 评论区域 -->
+    <div class="article-container comment-container">
+       <div class="content">
+          <split-line class="split-line" :icon="'message'" :desc="'评论'"></split-line>
+          <div class="comment-wrapper">
+             <comment @createCommentSuccess="getComments" :articleId="parseInt(id)" :comments="comments"></comment>
+          </div>
+       </div>  
+    </div> 
+
+    <aside class="like-wrapper">
+      <div class="item" @click="likeArticle">
+        <span class="count">{{articleLike}}</span>
+        <i class="icon icon-heart-fill" :class="{'is-like': isLike}"></i>
+      </div>
+      <div class="item">
+        <span class="count">{{comments.length}}</span>
+        <i class="icon icon-message-fill"></i>
+      </div>
+    </aside>
   </div>
 </template>
 
 
 <script>
+
 import markdown from "@/plugins/marked";
-import { mapState } from "vuex";
+import { mapState,mapActions } from "vuex";
+import Comment from '@/components/layout/comment/comment'
 import Recommend from "@/components/layout/recommend/recommend";
 import TagList from "@/components/base/tag-list/tag-list";
 import SplitLine from "@/components/base/split-line/split-line";
@@ -71,7 +93,8 @@ export default {
   components: {
     TagList,
     SplitLine,
-    Recommend
+    Recommend,
+    Comment
   },
 
   async fetch({ store, params }) {
@@ -85,14 +108,71 @@ export default {
 
   data() {
     return {
-      id: 0
+      id: 0,
+      likeArticles: [],
+      articleLike: 0,
+      articleCover: null
     };
   },
 
   methods: {
+    initImg() {
+      import('../../services/utils/lazy-img').then(res => {
+        res.default('.image-popper')
+      })
+      const el = this.$refs.markedContent
+      el.addEventListener('click', e => {
+        const target = e.target
+        if (target.nodeName.toLocaleLowerCase() === 'img' && target.classList.contains('image-popper')) {
+          e.stopPropagation()
+          this.imgLoading = true
+          this.dialogVisible = true
+          const src = target.dataset.origin
+
+          const image = new Image()
+          image.src = src
+
+          image.onload = () => {
+            this.imgSrc = src
+            this.imgLoading = false
+          }
+
+          image.onerror = () => {
+            this.imgSrc = src
+            this.imgLoading = false
+          }
+        }
+      })
+    },
+
+    getComments() {
+      console.log(1)
+      this.$store.dispatch('article/getComments', {
+        articleId: this.id
+      })
+    },
+
     onShowRecommendDetail(id) {
       const ids = id;
       this.$router.push(`/article/${ids}`);
+    },
+    
+    //点赞
+    async likeArticle() {
+       if(this.isLike) {
+         return 
+       }
+       try {
+         const res = await this.$store.dispatch('article/likeArticle',this.id)
+         if(res.errorCode === 0) {
+           this.articleLike++;
+           this.likeArticles.push(this.id)
+           window.localStorage.setItem('LIKE_ARTICLES', JSON.stringify(this.likeArticles))
+         }
+         console.log(res)
+       } catch(e) {
+         console.log(e)
+       } 
     },
 
     // markdown解析
@@ -102,8 +182,28 @@ export default {
   },
 
   computed: {
-    ...mapState("article", ["article"]),
-    ...mapState("article", ["comments"]),
+    // ...mapState("article", ["article"]),
+    ...mapState({
+      article(state) {
+        const article = state.article.article
+        if (!article) {
+          return {}
+        }
+        if (article.cover) {
+          this.articleCover = { backgroundImage: `url(${article.cover})` }
+        } else {
+          this.articleCover = { backgroundImage: `url(${defaultCover})` }
+        }
+        this.articleLike = article.like
+        return article
+      },
+      comments: state => state.article.comments
+    }),
+    // ...mapState("article", ["comments"]),
+    
+    isLike() {
+       return this.likeArticles.includes(this.id)
+    },
 
     haveCategoryArtilces() {
       return (
@@ -138,7 +238,6 @@ export default {
 .article-header {
   @include cover;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
   width: calc(100% - 85px - 85px);
@@ -181,7 +280,7 @@ export default {
   }
 
   .title {
-    margin: 0.7em 0;
+    margin: .7em 0;
     line-height: 1;
     color: #fff;
     font-size: $title-font-size-extra-large;
@@ -196,7 +295,7 @@ export default {
     font-size: $font-size-small;
 
     @media (max-width: 479px) {
-      font-size: $font-size-minimum;
+      font-size: $font-size-minimum
     }
 
     .author-name {
@@ -209,9 +308,172 @@ export default {
       }
 
       &:not(:first-child)::before {
-        content: "、";
+        content: '、'
       }
     }
+  }
+}
+
+.article-container {
+  @include container;
+  position: relative;
+  margin-top: -10vh;
+  border-radius: 5px 5px 0 0;
+
+  @media (max-width: 479px) {
+    margin-top: 0;
+  }
+
+  .content {
+    @include articlePadding;
+    border-radius: 5px 5px 0 0;
+    background-color: var(--app-background-color-light);
+    // box-shadow: 0 2px 24px 5px rgba(0, 0, 0, .05);
+    transition: $theme-transition;
+
+    @media (max-width: 479px) {
+      box-shadow: none;
+      background-color: var(--app-background-color);
+    }
+  }
+
+  .split-line {
+    margin: 20px 0;
+
+    @media (max-width: 479px) {
+      margin: 10px 0;
+    }
+  }
+}
+
+.comment-container {
+  margin-top: 0;
+  border-radius: 0 0 5px 5px;
+
+  .content {
+    padding-top: 5px;
+  }
+
+  @media (max-width: 479px) {
+    margin-top: 0;
+
+    .content {
+      padding-top: 0;
+    }
+  }
+}
+
+.like-wrapper {
+  position: fixed;
+  right: 0;
+  bottom: 21%;
+  z-index: $index-popper;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .14);
+
+  @media (max-width: 479px) {
+    display: none;
+  }
+
+  .item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--tag-color);
+    background-color: var(--app-background-color);
+    cursor: pointer;
+
+    &:not(:last-child) {
+      border-bottom: none;
+    }
+
+    &:hover {
+      >i {
+        color: var(--theme-active);
+      }
+    }
+
+    .count {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 0 5px;
+      font-size: $font-size-small;
+      border-radius: 8px;
+      transform: translate(-50%, -50%);
+      background-color: var(--tag-color);
+    }
+
+    >i {
+      font-size: $font-size-extra-large;
+      transition: all .15s linear;
+    }
+
+    .is-like {
+      color: var(--theme-active);
+    }
+  }
+}
+
+.article-info-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tags-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  font-size: 1rem;
+
+  >i {
+    margin: 8px 10px 0 0;
+    font-size: $font-size-icon-rem;
+  }
+
+  .tags {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin-top: 10px;
+
+    .tag-item {
+      cursor: pointer;
+
+      &:not(:first-child)::before {
+        content: '、'
+      }
+    }
+  }
+}
+
+.like-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  margin-top: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+
+  >i {
+    margin-right: 6px;
+    font-size: $font-size-icon-rem;
+
+    &:hover {
+      color: var(--theme-active);
+    }
+  }
+
+  > span {
+    white-space: nowrap;
+  }
+
+  .is-like {
+    color: var(--theme-active);
   }
 }
 </style>

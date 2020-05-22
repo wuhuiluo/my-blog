@@ -21,7 +21,6 @@
     </div>
   </section>
 </template>
-
 <script>
 import { mapState } from 'vuex'
 import AppLogo from '@/components/AppLogo.vue'
@@ -35,10 +34,13 @@ export default {
   },
   computed: {
      ...mapState('article',['articles','starArticles','total'])
+     
   },
   mounted() {
     console.log(this.articles,this.starArticles,this.total)
-  }
+  },
+
+
 }
 </script>
 

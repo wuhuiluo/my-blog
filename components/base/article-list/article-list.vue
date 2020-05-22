@@ -143,6 +143,7 @@ export default {
     width: 100%;
     color: var(--font-color-article);
     .category {
+      font-size: 20px;
       cursor: pointer;
       color: var(--font-color-light);
     }

@@ -1,5 +1,5 @@
 import article from '../models/article'
-// import comment from '../models/comment'
+import comment from '../models/comment'
 import Utils from '../services/utils/util'
 import marked from '../plugins/marked'
 
@@ -16,12 +16,37 @@ export const state = () => ({
   comments: []
 })
 export const mutations = {
+  setLikeComment(state, id) {
+    state.comments.forEach(v => {
+      if (v.id === id) {
+        v.like ++
+      }
+    })
+  },
+  
   setHomeArticles(state,{articles,starArticles,total}) {
       state.articles = articles
       state.starArticles = starArticles
       state.total = total
   },
- 
+  
+  setComments(state, comments = []) {
+    comments.forEach(v => {
+      v.content = marked(v.content)
+      if (v.parent_id !== 0) {
+        const reply = comments.find(target => target.id === v.parent_id)
+        if (reply) {
+          v.replyName = reply.nickname
+          v.replyContent = marked(reply.content)
+        } else {
+          v.replyName = ''
+          v.replyContent = '该评论已被删除'
+        }
+      }
+    })
+    state.comments = comments
+  },
+
   setArchive(state, { archive, total } ) {
       state.archive = archive
       state.archiveTotal = total
@@ -49,6 +74,14 @@ export const mutations = {
   }
 }
 export const actions = {
+  async likeCommentt({ commit}, id) {
+    const res = await comment.likeComment(id)
+    if (res.errorCode === 0) {
+      commit('setLikeComment', id)
+      return res
+    }
+  },
+  
   // 获取首页文章列表
   async getHomeArticles({commit},params) {
     try {
@@ -134,5 +167,23 @@ export const actions = {
     } catch(e) {
       console.log(e)
     }
-  }
+  },
+
+  async likeArticle(_,id) {
+     return  await article.likeArticle(id)
+  },
+
+  async getComments({ commit }, params) {
+    try {
+      const comments = await comment.getComments(params)
+      commit('setComments', comments)
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e)
+    }
+  },
+
+  async createComment(_, params) {
+    return await comment.createComment(params)
+  },
 }

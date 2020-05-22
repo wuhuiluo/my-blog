@@ -5,10 +5,11 @@
     <page-footer :NavList="NavList"></page-footer>
   </div>
 </template>
+
 <script>
 import { mapState, mapMutations } from "vuex";
 import PageHeader from "@/components/layout/page-header/page-header";
-import PageFooter from "@/components/layout/page-footer/page-footer"
+import PageFooter from "@/components/layout/page-footer/page-footer";
 const NavList = [
   {
     link: "/",
@@ -38,17 +39,17 @@ export default {
     };
   },
   computed: {
-    ...mapState('app',['theme'])
+    ...mapState("app", ["theme"])
   },
   methods: {
-    ...mapMutations('app',['setTheme'])
+    ...mapMutations("app", ["setTheme"])
   },
   mounted() {
     // 第一种实现方法
     // this.setTheme(this.theme)
     //第二种实现方法
-    const theme = window.localStorage.getItem('theme')
-    this.setTheme(theme || 'light')
+    const theme = window.localStorage.getItem("theme");
+    this.setTheme(theme || "light");
   },
   components: {
     PageHeader,
