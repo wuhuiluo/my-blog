@@ -15,12 +15,20 @@
         <a href="https://github.com/smileShirmy">
           <i class="icon icon-github"></i>
         </a>
-        <a href="https://juejin.im/user/5a37bf31f265da430e4f43eb"><span class="text">CSDN</span></a>
+        <a href="https://juejin.im/user/5a37bf31f265da430e4f43eb">
+          <span class="text">CSDN</span>
+        </a>
       </div>
     </div>
     <div class="footer-copyright">
-      <span class="copyright">© 2020 <span class="logo">Keep Smile</span></span>. Believe YourSelf You Can
-      <div class="record-number">吴辉洛的博客</div>
+      <span class="copyright">
+        © 2020
+        <span class="logo">Keep Smile</span>
+      </span>. Believe YourSelf You Can
+    </div>
+    <div class="time">
+      <span>网站已运行:</span>
+      <span id="span"></span>
     </div>
   </footer>
 </template>
@@ -36,6 +44,32 @@ export default {
       default: () => []
     }
   },
+
+  computed: {},
+
+  methods: {
+    runtime() {
+      // 初始时间，日/月/年 时:分:秒
+      let X = new Date("5/23/2020 14:00:00");
+      let Y = new Date();
+      let T = Y.getTime() - X.getTime();
+      let M = 24 * 60 * 60 * 1000;
+      let a = T / M;
+      let A = Math.floor(a);
+      let b = (a - A) * 24;
+      let B = Math.floor(b);
+      let c = (b - B) * 60;
+      let C = Math.floor((b - B) * 60);
+      let D = Math.floor((c - C) * 60);
+      //信息写入到DIV中
+      span.innerHTML = A + "天" + B + "小时" + C + "分" + D + "秒";
+    }
+  },
+
+  mounted() {
+    setInterval(this.runtime, 1000);
+  },
+
   components: {
     SwitchTheme,
     DesktopNav
@@ -110,12 +144,11 @@ export default {
       .icon {
         font-size: $font-size-icon-rem;
         &:hover {
-          color: var(--theme-active)
+          color: var(--theme-active);
         }
       }
     }
   }
-  
 
   .footer-copyright {
     padding: 25px 30px;
@@ -124,12 +157,12 @@ export default {
     line-height: 1.3;
     margin: 0 auto;
     text-align: center;
-    letter-spacing: .7px;
+    letter-spacing: 0.7px;
     color: var(--font-color-light);
     .copyright {
       font-weight: $font-weight-bold;
       .logo {
-        color: var(--font-color-dark)
+        color: var(--font-color-dark);
       }
     }
     .record-number {
@@ -138,4 +171,10 @@ export default {
   }
 }
 
+.time {
+  color: black;
+  font-weight: 400;
+  font-size: 20px;
+  margin-bottom: 30px;
+}
 </style>
