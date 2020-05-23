@@ -23,7 +23,11 @@ export const mutations = {
       }
     })
   },
-  
+
+  setMoreArticles(state, { articles }) {
+    state.articles = state.articles.concat(articles)
+  },
+
   setHomeArticles(state,{articles,starArticles,total}) {
       state.articles = articles
       state.starArticles = starArticles
@@ -82,6 +86,17 @@ export const actions = {
     }
   },
   
+  //获取更多文章
+  async getMoreArticles({ commit }, params) {
+    try {
+      const { articles, total } = await article.getArticles(params)
+      commit('setMoreArticles', { articles, total })
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e)
+    }
+  },
+
   // 获取首页文章列表
   async getHomeArticles({commit},params) {
     try {

@@ -92,7 +92,7 @@ export default {
   border-radius: 5px;
   background-color: var(--app-background-color-light);
   // box-shadow: 0 2px 24px 5px rgba(0, 0, 0, .05);
-  transition: $theme-transition;
+  // transition: $theme-transition;
 
   @media (max-width: 1399px) {
     padding: 40px 90px;
@@ -117,7 +117,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: flex-start;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
     text-align: left;
 
     @media (max-width: 1023px) {
@@ -143,6 +143,7 @@ export default {
     width: 100%;
     color: var(--font-color-article);
     .category {
+      display: flex;
       font-size: 25px;
       cursor: pointer;
       color: var(--font-color-light);
@@ -199,8 +200,7 @@ export default {
         align-items: center;
 
         .avatar-wrapper {
-          display: flex;
-          justify-content: flex-start;
+          
 
           .avatar {
             display: inline-block;
@@ -228,7 +228,7 @@ export default {
 
         .name {
           margin-left: 12px;
-          margin-bottom: 15px;
+          margin-bottom: 10px;
           white-space: nowrap;
 
           &:not(:first-child) {
@@ -316,5 +316,8 @@ export default {
     background-color: var(--theme-active);
     transform: scale(0.65);
   }
+}
+.article-item .time:before {
+   content: none;
 }
 </style>

@@ -31,7 +31,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 160px;
+  height: 140px;
   width: 100%;
   max-width: 1200px;
   z-index: $index-top;

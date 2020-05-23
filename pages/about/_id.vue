@@ -72,8 +72,9 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 .avatar {
+  display: flex;
   width: 120px;
   height: 120px;
   margin: 0 auto 20px;
