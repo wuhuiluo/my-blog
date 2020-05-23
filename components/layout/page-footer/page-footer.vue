@@ -27,7 +27,7 @@
       </span>. Believe YourSelf You Can
     </div>
     <div class="time">
-      <span>网站已运行:</span>
+      <span>本站已运行:</span>
       <span id="span"></span>
     </div>
   </footer>
@@ -176,5 +176,6 @@ export default {
   font-weight: 400;
   font-size: 20px;
   margin-bottom: 30px;
+  letter-spacing: 2px;
 }
 </style>

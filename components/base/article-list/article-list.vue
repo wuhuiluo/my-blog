@@ -235,9 +235,7 @@ export default {
             margin-left: 0;
           }
 
-          &:not(:first-child)::before {
-            content: ", ";
-          }
+          
         }
       }
       .info-wrapper {
