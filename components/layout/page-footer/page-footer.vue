@@ -9,13 +9,13 @@
         <desktop-nav :NavList="NavList"></desktop-nav>
       </div>
       <div class="social-links between">
-        <a href="mailto:qiushiming1997@gmail.com" target="_blank">
+        <a href="mailto:510426343@qq.com" target="_blank">
           <i class="icon icon-mail"></i>
         </a>
-        <a href="https://github.com/smileShirmy">
+        <a href="https://github.com/wuhuiluo" target="_blank">
           <i class="icon icon-github"></i>
         </a>
-        <a href="https://juejin.im/user/5a37bf31f265da430e4f43eb">
+        <a href="https://blog.csdn.net/m0_46269977" target="_blank">
           <span class="text">CSDN</span>
         </a>
       </div>

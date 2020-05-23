@@ -1,13 +1,15 @@
 <template>
   <div class="tags-detail-container">
-    <detail-header :cover="cover" :name="name" :description="description">
-       <template v-slot:info>
+    <div class="headers">
+      <detail-header :cover="cover" :name="name" :description="description">
+        <template v-slot:info>
           <div class="posts-number">
-             <i class="icon icon-post"></i>
-             <span>{{total || 0}}&nbsp;posts</span>
+            <i class="icon icon-post"></i>
+            <span>{{total || 0}}&nbsp;posts</span>
           </div>
-       </template>
-    </detail-header>
+        </template>
+      </detail-header>
+    </div>
     <article class="article-list">
       <article-list :articles="articles" :total="total" @loadMore="onLoadMore"></article-list>
     </article>
@@ -16,9 +18,9 @@
 
 
 <script>
-import { mapState,mapActions } from "vuex"
-import ArticleList from "@/components/base/article-list/article-list"
-import DetailHeader from "@/components/layout/detail-header/detail-header"
+import { mapState, mapActions } from "vuex";
+import ArticleList from "@/components/base/article-list/article-list";
+import DetailHeader from "@/components/layout/detail-header/detail-header";
 export default {
   props: {
     id: Number,
@@ -27,45 +29,45 @@ export default {
       type: String,
       default: ""
     },
-    
+
     description: {
-        type: String,
-        default: ""
+      type: String,
+      default: ""
     },
 
     cover: {
       type: String,
-      default: ''
+      default: ""
     }
   },
 
   components: {
-     DetailHeader,
-     ArticleList
+    DetailHeader,
+    ArticleList
   },
-  
+
   methods: {
     onLoadMore() {
-      this.page++
+      this.page++;
       const params = {
         page: this.page,
-        [this.type === 'tag' ? 'tagId' : 'categoryid'] : this.id
-      }
-      this.getMoreArticles(params)
+        [this.type === "tag" ? "tagId" : "categoryid"]: this.id
+      };
+      this.getMoreArticles(params);
     },
-    
-    ...mapActions('tag',['getMoreArticles'])
+
+    ...mapActions("tag", ["getMoreArticles"])
   },
-  
+
   data() {
     return {
       page: 0
-    }
+    };
   },
 
   computed: {
-    ...mapState('tag',['total']),
-    ...mapState('tag',['articles'])
+    ...mapState("tag", ["total"]),
+    ...mapState("tag", ["articles"])
   },
 
   mounted() {
@@ -78,6 +80,9 @@ export default {
 
 
 <style lang="scss" scoped>
+.headers {
+  color: #fff!important;
+}
 .posts-number {
   display: flex;
   align-items: center;

@@ -34,7 +34,7 @@ export default {
   created() {
     //  标签
     this.name = this.$nuxt.$route.query.name;
-    this.cover = "https://resource.shirmy.me/lighthouse.jpeg";
+    this.cover = "http://p1.music.126.net/IOeYfYYhuHDj7hMpWXPLKA==/109951165008181794.jpg?imageView&quality=89"
     this.id = parseInt(this.$nuxt.$route.params.id);
   },
 

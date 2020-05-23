@@ -1,4 +1,3 @@
-
 module.exports = {
   mode: 'universal',
 
@@ -7,27 +6,46 @@ module.exports = {
   },
 
   /*
-  ** Headers of the page
-  */
+   ** Headers of the page
+   */
   head: {
     title: '吴辉洛的博客',
     titleTemplate: '%s | whl',
-    meta: [
-      { charset: 'utf-8' },
-      { 'http-equiv': 'cleartype', content: 'on' },
-      { 'http-equiv': 'Cache-Control' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1, user-scalable=no' },
-      { hid: 'keywords', name: 'keywords', content: '前端，JavaScript，博客，Node，Vue' },
-      { name: 'author', content: 'qiushiming1997@gmail.com' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
-    ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'dns-prefetch', href: '//resource.shirmy.me' },
-      { rel: 'dns-prefetch', href: '//api.shirmy.me' },
-    ],
-    script: [
+    meta: [{
+        charset: 'utf-8'
+      },
       {
+        'http-equiv': 'cleartype',
+        content: 'on'
+      },
+      {
+        'http-equiv': 'Cache-Control'
+      },
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1, user-scalable=no'
+      },
+      {
+        hid: 'keywords',
+        name: 'keywords',
+        content: '前端，JavaScript，Vue'
+      },
+      {
+        name: 'author',
+        content: '510426343@qq.com'
+      },
+      {
+        hid: 'description',
+        name: 'description',
+        content: process.env.npm_package_description || ''
+      }
+    ],
+    link: [{
+      rel: 'icon',
+      type: 'image/x-icon',
+      href: '/favicon.ico'
+    }],
+    script: [{
         async: 'async',
         type: 'text/javascript',
         src: 'https://resource.shirmy.me/intersection-polyfill.js'
@@ -49,32 +67,33 @@ module.exports = {
         `
       }
     ],
-    noscript: [
-      {
-        innerHTML: 'This website requires JavaScript.'
-      }
-    ],
+    noscript: [{
+      innerHTML: 'This website requires JavaScript.'
+    }],
     __dangerouslyDisableSanitizers: ['script']
   },
   /*
-  ** Customize the progress-bar color
-  */
-  loading: { color: '#fff' },
+   ** Customize the progress-bar color
+   */
+  loading: {
+    color: '#fff'
+  },
   /*
-  ** Global CSS
-  */
-  css: [
-    {
+   ** Global CSS
+   */
+  css: [{
       src: './assets/scss/index.scss',
       lang: 'sass'
+    },
+    {
+      src: 'element-ui/lib/theme-chalk/index.css'
     },
     'highlight.js/styles/github.css'
   ],
   /*
-  ** Plugins to load before mounting the App
-  */
-  plugins: [
-    {
+   ** Plugins to load before mounting the App
+   */
+  plugins: [{
       src: '~/plugins/marked.js'
     },
     {
@@ -85,6 +104,10 @@ module.exports = {
     },
     {
       src: '~/plugins/filter.js'
+    },
+    {
+      src: '@/plugins/element-ui.js',
+      ssr: true
     },
     {
       src: '~/plugins/global-component.js'
@@ -99,12 +122,15 @@ module.exports = {
    */
   router: {
     scrollBehavior: function (to, from, savedPosition) {
-      return { x: 0, y: 0 }
+      return {
+        x: 0,
+        y: 0
+      }
     }
   },
   /*
-  ** Nuxt.js modules
-  */
+   ** Nuxt.js modules
+   */
   modules: [
     '@nuxtjs/style-resources'
   ],
@@ -113,13 +139,24 @@ module.exports = {
     scss: ['./assets/scss/variables.scss', './assets/scss/mixin.scss']
   },
   /*
-  ** Build configuration
-  */
+   ** Build configuration
+   */
   build: {
+    babel: {
+      plugins: [
+        [
+          'component',
+          {
+            libraryName: 'element-ui',
+            styleLibraryName: 'theme-chalk'
+          }
+        ]
+      ],
+      comments: true
+    },
     /*
-    ** You can extend webpack config here
-    */
-    extend(config, ctx) {
-    }
+     ** You can extend webpack config here
+     */
+    extend(config, ctx) {}
   }
 }

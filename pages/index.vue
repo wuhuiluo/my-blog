@@ -1,21 +1,39 @@
 <template>
   <section class="container">
-    <div>
-      <app-logo />
-      <h1 class="title">my-blog</h1>
-      <h2 class="subtitle">Nuxt.js project</h2>
-      <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
-        <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
-      </div>
-    </div>
+    <el-carousel :interval="4000" type="card" height="200px">
+      <el-carousel-item  v-for="(img,index) in imgList" :key="index">
+        <img :src="img.img"/>
+      </el-carousel-item>
+    </el-carousel>
   </section>
 </template>
 <script>
 import { mapState } from "vuex";
 import AppLogo from "@/components/AppLogo.vue";
-
+const imgList = [
+  {
+    img:"http://p1.music.126.net/IOeYfYYhuHDj7hMpWXPLKA==/109951165008181794.jpg?imageView&quality=89"
+  },
+  {
+    img:"http://p1.music.126.net/ALoKlu7B9fdT_DPB2LzH3g==/109951165008532251.jpg?imageView&quality=89"
+  },
+  {
+    img:"http://p1.music.126.net/S4nsy5LxeywT3U1Rifq7Bw==/109951165008232178.jpg?imageView&quality=89"
+  },
+  {
+    img:"http://p1.music.126.net/S92V9THxRky7eLsdPHKVug==/109951165009832806.jpg?imageView&quality=89"
+  },
+  {
+    img:"http://p1.music.126.net/IdgNPE1Z0R6W5Cokbe6Emg==/109951165008185886.jpg?imageView&quality=89"
+  }
+];
 export default {
+  data() {
+    return {
+       imgList
+    }
+  },
+
   components: {
     AppLogo
   },
@@ -27,39 +45,11 @@ export default {
   },
   mounted() {
     console.log(this.articles, this.starArticles, this.total);
-  },
+  }
 };
 </script>
 
 <style>
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
 
-.title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
 </style>
 

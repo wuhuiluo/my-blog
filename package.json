@@ -15,6 +15,7 @@
   "dependencies": {
     "@nuxtjs/style-resources": "^1.0.0",
     "axios": "^0.19.2",
+    "element-ui": "^2.13.2",
     "highlight.js": "^10.0.2",
     "lru-cache": "^5.1.1",
     "marked": "^1.0.0",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
+    "babel-plugin-component": "^1.1.1",
     "eslint": "^4.19.1",
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-loader": "^2.1.1",

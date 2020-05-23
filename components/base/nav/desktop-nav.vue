@@ -4,9 +4,6 @@
       <nuxt-link class="nav-link" tag="a" :to="item.link">{{item.name}}</nuxt-link>
       <span class="nav-dot"></span>
     </li>
-    <li class="nav-list-item">
-      <i class="icon icon-search"></i>
-    </li>
   </ul>
 </template>
 <script>

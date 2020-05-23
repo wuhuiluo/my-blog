@@ -6,7 +6,7 @@
           <article class="article-wrapper">
             <a class="category">{{article.category.name}}</a>
             <h3 class="title">
-              <router-link class="article-link" to="/article">
+              <router-link class="article-link" :to="`/article/${article.id}`">
                 {{article.title}}
                 <span class="hover-dot"></span>
               </router-link>
@@ -143,7 +143,7 @@ export default {
     width: 100%;
     color: var(--font-color-article);
     .category {
-      font-size: 20px;
+      font-size: 25px;
       cursor: pointer;
       color: var(--font-color-light);
     }
